@@ -29,5 +29,4 @@ You can ask questions like:
 
 ---
 
-## 📁 Project Structure
 
