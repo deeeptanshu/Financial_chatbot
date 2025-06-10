@@ -1,12 +1,10 @@
-from flask import Flask, render_template, request
+import streamlit as st
 import requests
 import re
+import os
 
-app = Flask(__name__)
+API_KEY = os.getenv("API_KEY", "lNgJRoYqq7cv8vopajcVGNRSNy2EFN9T")
 
-API_KEY = "lNgJRoYqq7cv8vopajcVGNRSNy2EFN9T"
-
-# Step 1: Map company names to stock symbols
 COMPANY_SYMBOLS = {
     "microsoft": "MSFT",
     "apple": "AAPL",
@@ -20,19 +18,16 @@ COMPANY_SYMBOLS = {
     "ibm": "IBM"
 }
 
-# Step 2: Extract company symbol from user query
 def extract_company_symbol(query):
     for name in COMPANY_SYMBOLS:
         if name in query.lower():
             return COMPANY_SYMBOLS[name]
-    return "MSFT"  # default if not found
+    return "MSFT"
 
-# Step 3: Extract year from user query
 def extract_year(query):
     match = re.search(r"\b(20\d{2})\b", query)
     return match.group(1) if match else None
 
-# Step 4: Fetch financial data
 def get_income_statement(symbol):
     url = f"https://financialmodelingprep.com/api/v3/income-statement/{symbol}?limit=5&apikey={API_KEY}"
     response = requests.get(url)
@@ -40,7 +35,6 @@ def get_income_statement(symbol):
         return response.json()
     return None
 
-# Step 5: Chatbot logic
 def real_chatbot(user_query):
     symbol = extract_company_symbol(user_query)
     year = extract_year(user_query)
@@ -56,7 +50,7 @@ def real_chatbot(user_query):
                 data = entry
                 break
     else:
-        data = data_list[0]  # most recent
+        data = data_list[0]
 
     if not data:
         return f"No financial data available for {symbol} in {year}."
@@ -78,14 +72,14 @@ def real_chatbot(user_query):
     else:
         return "Sorry, I can only answer specific questions like revenue, net income, R&D, EPS, or cash flow."
 
-# Step 6: Web route
-@app.route("/", methods=["GET", "POST"])
-def index():
-    response = ""
-    if request.method == "POST":
-        user_query = request.form["query"]
-        response = real_chatbot(user_query)
-    return render_template("index.html", response=response)
+# Streamlit UI
+st.title("💬 Financial Chatbot")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+user_query = st.text_input("Ask a financial question (e.g., 'What was Apple's net income in 2022?')")
+
+if st.button("Ask"):
+    if user_query:
+        answer = real_chatbot(user_query)
+        st.success(answer)
+    else:
+        st.warning("Please enter a question.")
