@@ -7,6 +7,10 @@ You can ask questions like:
 - "Tell me the net income of Google in 2021"
 - "Cash flow from operations of Tesla in 2020"
 - "How much did Microsoft spend on R&D in 2023?"
+  
+---
+
+## **Live Demo:** Check out the deployed Streamlit app [here](https://financialchatbot-h9bmbmzcn8xpu5syqypius.streamlit.app/)
 
 ---
 
@@ -17,6 +21,7 @@ You can ask questions like:
 ![Demo](https://github.com/deeeptanshu/financial-chatbot/blob/main/Animation.gif)
 
 ---
+
 
 ## 🚀 Features
 
